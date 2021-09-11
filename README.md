@@ -1,38 +1,16 @@
-# gradle-getting-started
+# Movie Info
 
-A barebones Gradle app, which can easily be deployed to Heroku.
+## Running locally
 
-This application support the [Getting Started with Gradle on Heroku](https://devcenter.heroku.com/articles/getting-started-with-gradle-on-heroku) article - check it out.
+To run the app locally use:
+`gw clean bootRun`
 
-## Running Locally
+### Design
+`com.dk.slack.application.SlackApp` configures the Slack application instance, wiring the necessary
+components together. The `Application` and `SlackAppController` classes in the same package configure 
+the SpringBoot Application, and the base endpoint for `/slack/events`.
 
-Make sure you have Java installed.  Also, install the [Heroku Toolbelt](https://toolbelt.heroku.com/).
-
-```sh
-$ git clone https://github.com/heroku/gradle-getting-started.git
-$ cd gradle-getting-started
-$ ./gradlew stage
-$ heroku local web
-```
-
-Your app should now be running on [localhost:5000](http://localhost:5000/).
-
-If you're going to use a database, ensure you have a local `.env` file that reads something like this:
-
-```
-DATABASE_URL=postgres://localhost:5432/gradle_database_name
-```
-
-## Deploying to Heroku
-
-```sh
-$ heroku create
-$ git push heroku master
-$ heroku open
-```
-
-## Documentation
-
-For more information about using Java on Heroku, see these Dev Center articles:
-
-- [Java on Heroku](https://devcenter.heroku.com/categories/java)
+Requires the following ENV variables are set:
+- MOVIE_DB_API_KEY
+- SLACK_BOT_TOKEN
+- SLACK_SIGNING_SECRET

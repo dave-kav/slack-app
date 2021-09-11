@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.dk.slack;
+package com.dk.slack.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
