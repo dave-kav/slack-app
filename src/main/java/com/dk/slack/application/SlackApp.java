@@ -30,7 +30,7 @@ public class SlackApp {
         var movieLookUp         = new MovieLookUp(client, gson);
         var movieMessageAction  = new MovieMessageAction(movieLookUp);
         var modalButtonAction   = new ModalButtonAction(movieMessageAction);
-        var movieButtonAction   = new MovieButtonAction(modalView);
+        var movieButtonAction   = new MovieButtonAction(modalView, dataSource);
 
         modalButtonAction.register(app);
         movieButtonAction.register(app);

@@ -1,14 +1,17 @@
 package com.dk.slack.action;
 
+import com.dk.slack.DataSource;
 import com.dk.slack.Registerable;
 import com.dk.slack.Viewable;
-import com.dk.slack.data.MapBackedDataSource;
 import com.slack.api.app_backend.interactive_components.response.Option;
 import com.slack.api.bolt.App;
 import com.slack.api.bolt.context.builtin.ActionContext;
+import com.slack.api.bolt.context.builtin.BlockSuggestionContext;
 import com.slack.api.bolt.request.builtin.BlockActionRequest;
+import com.slack.api.bolt.request.builtin.BlockSuggestionRequest;
 import com.slack.api.bolt.response.Response;
 import com.slack.api.methods.SlackApiException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,9 +26,11 @@ public class MovieButtonAction implements Registerable {
     public final static String MOVIE_BUTTON_ACTION_ID = "movie-button-action";
 
     private final Viewable movieModalView;
+    private final DataSource dataSource;
 
-    public MovieButtonAction(Viewable modalView) {
+    public MovieButtonAction(Viewable modalView, DataSource dataSource) {
         this.movieModalView = modalView;
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -34,21 +39,11 @@ public class MovieButtonAction implements Registerable {
     }
 
     private void registerMovieButtonAction(App app) {
-        MapBackedDataSource mapBackedDataSource = new MapBackedDataSource();
-        app.blockAction(MOVIE_BUTTON_ACTION_ID, this::getResponse);
-        app.blockSuggestion(MOVIE_BUTTON_ACTION_ID, (req, ctx) -> {
-            String keyword = req.getPayload().getValue();
-            List<Option> allOptions = mapBackedDataSource.getOptions().stream()
-                    .map(o -> new Option(o.getText(), o.getValue()))
-                    .collect(toList());
-            List<Option> options = allOptions.stream()
-                    .filter(o -> o.getText().getText().contains(keyword))
-                    .collect(toList());
-            return ctx.ack(r -> r.options(options.isEmpty() ? allOptions : options));
-        });
+        app.blockAction(MOVIE_BUTTON_ACTION_ID, this::getHandler);
+        app.blockSuggestion(MOVIE_BUTTON_ACTION_ID, this::getSuggestionHandler);
     }
 
-    private Response getResponse(BlockActionRequest req, ActionContext ctx) throws IOException, SlackApiException {
+    private Response getHandler(BlockActionRequest req, ActionContext ctx) throws IOException, SlackApiException {
         var logger = ctx.getLogger();
         var viewsOpenRes = ctx.client().viewsOpen(builder -> builder
                 .triggerId(ctx.getTriggerId())
@@ -58,6 +53,23 @@ public class MovieButtonAction implements Registerable {
 
         if (viewsOpenRes.isOk()) return ctx.ack();
         else return Response.builder().statusCode(500).body(viewsOpenRes.getError()).build();
+    }
+
+    private Response getSuggestionHandler(BlockSuggestionRequest req, BlockSuggestionContext ctx) {
+        String keyword = req.getPayload().getValue();
+
+        List<Option> options = getOptions().stream()
+                .filter(o -> o.getText().getText().contains(keyword))
+                .collect(toList());
+
+        return ctx.ack(r -> r.options(options.isEmpty() ? getOptions() : options));
+    }
+
+    @NotNull
+    private List<Option> getOptions() {
+        return dataSource.getOptions().stream()
+                .map(o -> new Option(o.getText(), o.getValue()))
+                .collect(toList());
     }
 
 }

@@ -4,8 +4,11 @@ import com.dk.slack.util.MovieLookUp;
 import com.slack.api.bolt.context.builtin.ViewSubmissionContext;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
+import com.slack.api.model.block.LayoutBlock;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.slack.api.model.block.Blocks.asBlocks;
 import static com.slack.api.model.block.Blocks.section;
@@ -25,23 +28,28 @@ public class MovieMessageAction {
         this.movieLookUp = movieLookUp;
     }
 
-    public ChatPostMessageResponse createMessage(ViewSubmissionContext ctx, String requestUserId, String selectedOptionValue) throws IOException, SlackApiException {
+    public ChatPostMessageResponse createMessage(ViewSubmissionContext ctx, String selectedOptionValue) throws IOException, SlackApiException {
         var movieInfo = movieLookUp.lookup(selectedOptionValue);
 
         return ctx.client().chatPostMessage(r -> r
                 .token(ctx.getBotToken())
-                .channel(requestUserId)
-                .blocks(asBlocks(
-                        section(builder -> builder.text(markdownText(mt -> mt.text(infoText)))),
-                        section(builder -> builder.text(markdownText(mt -> mt.text(String.format("*%s*" , movieInfo.getTitle()))))),
-                        section(builder -> builder
-                                .text(markdownText(mt -> mt.text(String.format("*Release date:* %s\n%s", movieInfo.getReleaseDate(), movieInfo.getOverview()))))
-                                .accessory(imageElement(imageElementBuilder -> imageElementBuilder
-                                        .imageUrl(movieInfo.getPosterPath())
-                                        .altText(movieInfo.getPosterPath())
-                                ))
-                        )
-                ))
+                .channel(ctx.getRequestUserId())
+                .blocks(getLayoutBlocks(movieInfo))
+        );
+    }
+
+    @NotNull
+    private List<LayoutBlock> getLayoutBlocks(MovieLookUp.MovieMetadata movieInfo) {
+        return asBlocks(
+                section(builder -> builder.text(markdownText(mt -> mt.text(infoText)))),
+                section(builder -> builder.text(markdownText(mt -> mt.text(String.format("*%s*" , movieInfo.getTitle()))))),
+                section(builder -> builder
+                        .text(markdownText(mt -> mt.text(String.format("*Release date:* %s\n%s", movieInfo.getReleaseDate(), movieInfo.getOverview()))))
+                        .accessory(imageElement(imageElementBuilder -> imageElementBuilder
+                                .imageUrl(movieInfo.getPosterPath())
+                                .altText(movieInfo.getPosterPath())
+                        ))
+                )
         );
     }
 }

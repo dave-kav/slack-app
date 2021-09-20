@@ -47,8 +47,7 @@ public class ModalButtonAction implements Registerable {
 
     private void createMovieMessage(ViewSubmissionContext ctx, Logger logger, String selectedOptionValue) {
         try {
-            var requestUserId = ctx.getRequestUserId();
-            var result = movieMessageAction.createMessage(ctx, requestUserId, selectedOptionValue);
+            var result = movieMessageAction.createMessage(ctx, selectedOptionValue);
             logger.debug("result: {}", result);
         } catch (IOException | SlackApiException e) {
             logger.error("error: {}", e.getMessage(), e);
