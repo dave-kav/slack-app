@@ -6,6 +6,8 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.model.block.LayoutBlock;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,8 +20,10 @@ import static com.slack.api.model.block.element.BlockElements.imageElement;
 /**
  * Handler for posting message with movie info
  */
+@Component
 public class MovieMessageAction {
 
+    @Autowired
     private final MovieLookUp movieLookUp;
 
     private final String infoText = "Here's the movie info you requested!";

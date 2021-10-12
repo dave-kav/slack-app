@@ -3,6 +3,8 @@ package com.dk.slack.view;
 import com.dk.slack.Viewable;
 import com.dk.slack.action.MovieButtonAction;
 import com.slack.api.model.view.View;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
@@ -11,6 +13,8 @@ import static com.slack.api.model.block.element.BlockElements.asElements;
 import static com.slack.api.model.block.element.BlockElements.button;
 import static com.slack.api.model.view.Views.view;
 
+@Component
+@Qualifier("appHomeView")
 public class AppHomeView implements Viewable {
 
     private final String welcomeText = "*Welcome to _Move Info_* :tada:";

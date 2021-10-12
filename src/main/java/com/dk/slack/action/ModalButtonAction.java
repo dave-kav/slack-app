@@ -8,14 +8,18 @@ import com.slack.api.bolt.request.builtin.ViewSubmissionRequest;
 import com.slack.api.bolt.response.Response;
 import com.slack.api.methods.SlackApiException;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
  * Action performed on MovieModal button click
  */
+@Component
 public class ModalButtonAction implements Registerable {
 
+    @Autowired
     private final MovieMessageAction movieMessageAction;
 
     public ModalButtonAction(MovieMessageAction movieMessageAction) {

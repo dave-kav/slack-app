@@ -3,6 +3,7 @@ package com.dk.slack.data;
 import com.dk.slack.DataSource;
 import com.slack.api.model.block.composition.OptionObject;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,6 +12,7 @@ import java.util.List;
 import static com.slack.api.model.block.composition.BlockCompositions.option;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
 
+@Component
 public class MapBackedDataSource implements DataSource {
 
     private final static LinkedHashMap<String, String> movies = new LinkedHashMap<>();

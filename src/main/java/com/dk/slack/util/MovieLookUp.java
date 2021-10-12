@@ -3,6 +3,8 @@ package com.dk.slack.util;
 import com.google.gson.Gson;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -12,12 +14,16 @@ import java.util.Objects;
 /**
  * Make HTTP call to The Movie DB API, parse and return required Metadata.
  */
+@Component
 public class MovieLookUp {
 
     public final String MOVIE_DB_API_KEY = "MOVIE_DB_API_KEY";
     public final String MOVIE_API = "https://api.themoviedb.org/3/movie/";
     private final String apiKey;
+
+    @Autowired
     private final OkHttpClient client;
+    @Autowired
     private final Gson gson;
 
     public MovieLookUp(OkHttpClient client, Gson gson) {

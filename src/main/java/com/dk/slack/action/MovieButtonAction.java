@@ -12,6 +12,9 @@ import com.slack.api.bolt.request.builtin.BlockSuggestionRequest;
 import com.slack.api.bolt.response.Response;
 import com.slack.api.methods.SlackApiException;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,15 +24,20 @@ import static java.util.stream.Collectors.toList;
 /**
  * Action defined on the button in App Home
  */
+@Component
 public class MovieButtonAction implements Registerable {
 
     public final static String MOVIE_BUTTON_ACTION_ID = "movie-button-action";
 
+    @Autowired
+    @Qualifier("movieModalView")
     private final Viewable movieModalView;
+
+    @Autowired
     private final DataSource dataSource;
 
-    public MovieButtonAction(Viewable modalView, DataSource dataSource) {
-        this.movieModalView = modalView;
+    public MovieButtonAction(Viewable movieModalView, DataSource dataSource) {
+        this.movieModalView = movieModalView;
         this.dataSource = dataSource;
     }
 

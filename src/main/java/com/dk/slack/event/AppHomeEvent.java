@@ -8,14 +8,18 @@ import com.slack.api.bolt.context.builtin.EventContext;
 import com.slack.api.bolt.response.Response;
 import com.slack.api.methods.SlackApiException;
 import com.slack.api.model.event.AppHomeOpenedEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 /**
  * Triggered when user opens the app
  */
+@Component
 public class AppHomeEvent implements Registerable {
 
+    @Autowired
     private final Viewable appHomeView;
 
     public AppHomeEvent(Viewable appHomeView) {

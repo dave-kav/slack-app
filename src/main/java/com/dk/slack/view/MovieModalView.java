@@ -3,6 +3,9 @@ package com.dk.slack.view;
 import com.dk.slack.DataSource;
 import com.dk.slack.Viewable;
 import com.slack.api.model.view.View;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import static com.slack.api.model.block.Blocks.asBlocks;
 import static com.slack.api.model.block.Blocks.input;
@@ -13,6 +16,8 @@ import static com.slack.api.model.view.Views.*;
 /**
  * Modal shown to user, presenting movie choices
  */
+@Component
+@Qualifier("movieModalView")
 public class MovieModalView implements Viewable {
 
     public final static String MOVIE_BLOCK_ID = "movie-block";
@@ -20,6 +25,7 @@ public class MovieModalView implements Viewable {
     private final String infoText = "Select a movie:";
     private final String placeHolderText = "Select an item";
 
+    @Autowired
     private final DataSource dataSource;
 
     public MovieModalView(DataSource dataSource) {
